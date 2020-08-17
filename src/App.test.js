@@ -1,5 +1,6 @@
 import React from 'react'
-import {render, screen, waitFor, userEvent} from '@testing-library/react'
+import {render, screen, waitFor} from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import App from './App'
 
 import fetchShow from './api/fetchShow'
@@ -612,16 +613,17 @@ test('Render the episodes to the page when data fetch finishes', async () => {
 
 fetchShow.mockResolvedValueOnce(episodesData)
 
-render(<App />)
+await render(<App />)
 
+screen.debug()
 
 // const button = await screen.getByRole('button', {name: /select a season/i})
 // userEvent.click(button)
 
-const button = await waitFor(() => screen.findByText(/select a season/i))
-userEvent.click(button)
+const select = await screen.findByText(/select a season/i)
+userEvent.click(select)
 
-const options = await screen.getAllByRole('option')
+let options = await screen.getAllByRole('option')
 expect(options).toHaveLength(4)
 
 const selectSeason = await screen.getByText(/season 1/i)
